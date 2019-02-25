@@ -1,15 +1,19 @@
 import React from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch, Route, Redirect } from 'react-router';
 import routes from './constants/routes';
 import App from './containers/App';
-import HomePage from './containers/HomePage';
-import CounterPage from './containers/CounterPage';
+
+import Home from './containers/Home';
+import Related from './containers/Related';
+import Playlist from './containers/Playlist';
 
 export default () => (
   <App>
     <Switch>
-      <Route path={routes.COUNTER} component={CounterPage} />
-      <Route path={routes.HOME} component={HomePage} />
+      <Route exact path="/home" component={Home} />
+      <Route exact path="/related/:id" component={Related} />
+      <Route exact path="/playlist" component={Playlist} />
+      <Redirect exact to="/home" />
     </Switch>
   </App>
 );
