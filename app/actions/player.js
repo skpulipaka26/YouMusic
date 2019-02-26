@@ -44,16 +44,18 @@ export const addSongToPlaylist = song => {
 export const removeSongFromPlaylist = videoId => {
   return (dispatch, getState) => {
     // if the song is playing, stop the song
-    const currPlaying = getState().player.currentPlaying;
-    if (currPlaying.videoId === videoId) {
-      currPlaying.player.stop();
-      const nextSong = getNextSong(videoId, getState);
-      playNextSong(nextSong, dispatch);
-    }
     dispatch({
       type: REMOVE_SONG_FROM_PLAYLIST,
       payload: videoId
     });
+    const currPlaying = getState().player.currentPlaying;
+    if (currPlaying.videoId === videoId) {
+      currPlaying.player.stop();
+      const nextSong = getNextSong(videoId, getState);
+      if (nextSong) {
+        playNextSong(nextSong, dispatch);
+      }
+    }
   };
 };
 
