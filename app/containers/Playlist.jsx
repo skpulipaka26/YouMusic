@@ -6,29 +6,28 @@ import { bindActionCreators } from 'redux';
 import Song from '../containers/Song';
 
 class Playlist extends Component {
-
-    render() {
-        return this.props.playlist.map(song => {
-            return (
-                <div className="my-2" key={song.videoId}>
-                    <Song song={song} />
-                </div>
-            );
-        });
-    }
+  render() {
+    return this.props.playlist.map(song => {
+      return (
+        <div className="my-2" key={song.videoId}>
+          <Song song={song} fromPlaylist={true} />
+        </div>
+      );
+    });
+  }
 }
 
 const mapStateToProps = ({ player: { playlist } }) => {
-    return {
-        playlist: playlist
-    };
-}
+  return {
+    playlist: playlist
+  };
+};
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators({}, dispatch);
-}
+  return bindActionCreators({}, dispatch);
+};
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
+  mapStateToProps,
+  mapDispatchToProps
 )(Playlist);
