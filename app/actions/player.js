@@ -47,6 +47,8 @@ export const removeSongFromPlaylist = videoId => {
     const currPlaying = getState().player.currentPlaying;
     if (currPlaying.videoId === videoId) {
       currPlaying.player.stop();
+      const nextSong = getNextSong(videoId, getState);
+      playNextSong(nextSong, dispatch);
     }
     dispatch({
       type: REMOVE_SONG_FROM_PLAYLIST,
@@ -110,24 +112,17 @@ export function setupPlayerEvents(event, videoId, player) {
           });
           break;
         }
+        case 'stop':
         case 'loaderror':
         case 'playerror': {
           resetPlayer(dispatch, getState);
           break;
         }
-        case 'stop':
         case 'end': {
           // reset the current player and play the next song
           resetPlayer(dispatch, getState);
           const nextSong = getNextSong(videoId, getState);
-          const { formats, ...metadata } = nextSong;
-          const player = dispatch(
-            setupCurrentPlayingPlayer({
-              metadata: metadata,
-              formats: formats
-            })
-          );
-          player.play();
+          playNextSong(nextSong, dispatch);
           break;
         }
         default:
@@ -161,6 +156,17 @@ function getNextSong(videoId, getState) {
   const nextSongIndex =
     currPlayerIndex + 1 === playlist.length ? 0 : currPlayerIndex + 1;
   return playlist[nextSongIndex];
+}
+
+function playNextSong(nextSong, dispatch) {
+  const { formats, ...metadata } = nextSong;
+  const player = dispatch(
+    setupCurrentPlayingPlayer({
+      metadata: metadata,
+      formats: formats
+    })
+  );
+  player.play();
 }
 
 function setIntervalAndExecute(callback, t) {
